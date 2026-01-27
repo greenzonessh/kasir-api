@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Tidak perlu go.sum/go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o kasir-api ./main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o kasir-api ./...
 
 # Runtime
 FROM alpine:latest
