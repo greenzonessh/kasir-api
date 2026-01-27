@@ -1,5 +1,5 @@
 # ---------- Build stage ----------
-FROM golang:1.26-alpine AS builder   # >= 1.25.6 terpenuhi
+FROM golang:1.26-alpine AS builder
 WORKDIR /app
 
 # Kalau tidak punya go.sum tidak apa-apa; cukup copy go.mod
