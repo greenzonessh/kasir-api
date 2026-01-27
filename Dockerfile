@@ -1,13 +1,16 @@
 # ---------- Build stage ----------
-FROM golang:1.26-alpine AS builder
+FROM golang:1.23-alpine AS builder
 WORKDIR /app
 
-# Kalau tidak punya go.sum tidak apa-apa; cukup copy go.mod
+# Aktifkan toolchain forwarding agar bisa otomatis upgrade ke 1.25.6
+ENV GOTOOLCHAIN=auto
+
+# Jika repo-mu tidak punya go.sum, tidak apa-apa; cukup copy go.mod
 COPY go.mod ./
 RUN go mod download || true
 
 COPY . .
-# Build semua, asumsikan hanya 1 package main
+# Build semua paket; asumsi hanya ada satu package main
 RUN CGO_ENABLED=0 GOOS=linux go build -buildvcs=false -ldflags="-s -w" -o kasir-api ./...
 
 # ---------- Runtime stage ----------
