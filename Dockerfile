@@ -1,12 +1,16 @@
-# Build stage
-FROM golang:1.22-alpine AS builder
+# ---------- Build stage ----------
+FROM golang:1.26-alpine AS builder   # >= 1.25.6 terpenuhi
 WORKDIR /app
 
-# Tidak perlu go.sum/go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o kasir-api ./...
+# Kalau tidak punya go.sum tidak apa-apa; cukup copy go.mod
+COPY go.mod ./
+RUN go mod download || true
 
-# Runtime
+COPY . .
+# Build semua, asumsikan hanya 1 package main
+RUN CGO_ENABLED=0 GOOS=linux go build -buildvcs=false -ldflags="-s -w" -o kasir-api ./...
+
+# ---------- Runtime stage ----------
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/kasir-api .
