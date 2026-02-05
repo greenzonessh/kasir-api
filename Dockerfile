@@ -12,7 +12,7 @@ RUN go mod download || true
 
 COPY . .
 # Build semua paket; asumsi hanya ada satu package main
-RUN CGO_ENABLED=0 GOOS=linux go build -buildvcs=false -ldflags="-s -w" -o kasir-api ./...
+RUN CGO_ENABLED=0 GOOS=linux go build -buildvcs=false -ldflags="-s -w" -o kasir-api .
 
 # ---------- Runtime stage ----------
 FROM alpine:latest
