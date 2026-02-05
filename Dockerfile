@@ -6,7 +6,8 @@ WORKDIR /app
 ENV GOTOOLCHAIN=auto
 
 # Jika repo-mu tidak punya go.sum, tidak apa-apa; cukup copy go.mod
-COPY go.mod go.sum ./
+COPY go.mod ./
+COPY go.sum ./
 RUN go mod download || true
 
 COPY . .
