@@ -51,11 +51,24 @@ func main() {
 	categoryService := services.NewCategoryService(categoryRepo)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 
+	// Transaction
+	transactionRepo := repositories.NewTransactionRepository(db)
+	transactionService := services.NewTransactionService(transactionRepo)
+	transactionHandler := handlers.NewTransactionHandler(transactionService)
+	http.HandleFunc("/api/checkout", transactionHandler.HandleCheckout) //
+
+	//Report
+	reportRepo := repositories.NewReportRepository(db)
+	reportService := services.NewReportService(reportRepo)
+	reportHandler := handlers.NewReportHandler(reportService)
+
 	// Setup routes
 	http.HandleFunc("/api/produk", productHandler.HandleProducts)
 	http.HandleFunc("/api/produk/", productHandler.HandleProductByID)
 	http.HandleFunc("/categories", categoryHandler.HandleCategory)
 	http.HandleFunc("/categories/", categoryHandler.HandleCategoryByID)
+	http.HandleFunc("/api/report/hari-ini", reportHandler.HandleReport)
+	http.HandleFunc("/api/report", reportHandler.HandleReportRange)
 
 	// locahost:8080/health
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
