@@ -1,5 +1,10 @@
 # ---------- Build stage ----------
 FROM golang:1.23-alpine AS builder
+
+# Install tzdata + ca-certificates supaya LoadLocation & HTTPS OK
+RUN apk add --no-cache tzdata ca-certificates
+ENV TZ=Asia/Jakarta
+
 WORKDIR /app
 
 # Aktifkan toolchain forwarding agar bisa otomatis upgrade ke 1.25.6
