@@ -1,9 +1,8 @@
 # ---------- Build stage ----------
 FROM golang:1.23-alpine AS builder
 
-# Install tzdata + ca-certificates supaya LoadLocation & HTTPS OK
-RUN apk add --no-cache tzdata ca-certificates
-ENV TZ=Asia/Jakarta
+# Install git (opsional jika go mod butuh) dan ca-certificates
+RUN apk add --no-cache git ca-certificates
 
 WORKDIR /app
 
@@ -21,6 +20,11 @@ RUN CGO_ENABLED=0 GOOS=linux go build -buildvcs=false -ldflags="-s -w" -o kasir-
 
 # ---------- Runtime stage ----------
 FROM alpine:latest
+
+# Install tzdata + ca-certificates supaya LoadLocation & HTTPS OK
+RUN apk add --no-cache tzdata ca-certificates
+ENV TZ=Asia/Jakarta
+
 WORKDIR /app
 COPY --from=builder /app/kasir-api .
 EXPOSE 8080
